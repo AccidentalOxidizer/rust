@@ -45,22 +45,39 @@ var cleanDOM = function() {
 var parseDate = function(dateString) {
   var dateObj = new Date(dateString);
   var locale = "en-us";
-  var date = dateObj.toLocaleDateString(locale);
-  var time = dateObj.toLocaleTimeString(locale);
-  return date + " " + time;
+  var month = dateObj.getMonth();
+  var day = dateObj.getDate();
+  var year = dateObj.getYear() % 100;
+  var hour = dateObj.getHours();
+  var amOrPm;
+  if (amOrPm > 11) {
+    amOrPm = 'PM';
+  } else {
+    amOrPm = 'AM';
+  }
+  var minute = dateObj.getMinutes();
+  return {
+    time: [hour, ':', minute, ' ', amOrPm].join(''),
+    date: [month, '/', day, '/', year].join('')
+  };
 };
 
 
 // we can't use handlebars / hogan for mustache due to chrome security limitations 
 var templating = function(comments) {
-  var result = '<div ' + dataAttribute + '="commentcontainer">';
+  var comment;
   var timestamp;
+  var result = '<div ' + dataAttribute + '="commentcontainer">';
   for (var i = comments.length - 1; i >= 0; i--) {
     comment = comments[i];
+    timestamp = parseDate(comment.createdAt);
     result += [
-      '<div id="', comment.User.name, '">',
+      '<div data-rust-identity="', comment.User.name, '">',
         '<div>', comment.User.name, '</div>',
-        '<div>', parseDate(comment.createdAt), '</div>',
+        '<div>', 
+          '<div>', parseDate(comment.createdAt).time, '</div>',
+          '<div>', parseDate(comment.createdAt).date, '</div>',
+        '</div>',
         '<div>', comment.text, '</div>',
       '</div>'].join('');
   }
@@ -69,7 +86,7 @@ var templating = function(comments) {
 };
 
 var addExpandButton = function(html){ 
-  html = '<div ' + dataAttribute + '="rustbody" data-rust-show="show">' + html;
+  html = '<div ' + dataAttribute + '="rustbody" data-rust-show="hide">' + html;
   html += '</div><div ' + dataAttribute + '="expandcontainer" data-rust-show="show"><svg><polygon ' + dataAttribute + '="expand" points="20,0 0,20, 20,20"/></svg><div>';
   return html;
 };
@@ -134,7 +151,7 @@ var registerEventListeners = function() {
   });
 
   //expand comments section when clicking expando button
-  dataSelector(rust, 'expand').addEventListener('mouseover', function() {
+  dataSelector(rust, 'expand').addEventListener('mouseover', function(evt) {
     var rustBody = rust.querySelector('[data-rust-identity="rustbody"]');
     var expandButton = rust.querySelector('[data-rust-identity="expandcontainer"]');
     if (rustBody.dataset.rustShow === 'hide') {
@@ -143,24 +160,16 @@ var registerEventListeners = function() {
     } 
   });
 
-  dataSelector(rust, 'rustbody').addEventListener('mouseout', function() {
+  dataSelector(rust, 'rustbody').addEventListener('mouseleave', function(evt) {
+    if (evt.toElement !== null){
     var rustBody = rust.querySelector('[data-rust-identity="rustbody"]');
-    var expandButton = rust.querySelector('[data-rust-identity="expandcontainer"]');
-    if (rustBody.dataset.rustShow === 'show') {
-      rustBody.dataset.rustShow = 'hide';
-      expandButton.dataset.rustShow = 'show';
-    } 
+      var expandButton = rust.querySelector('[data-rust-identity="expandcontainer"]');
+      if (rustBody.dataset.rustShow === 'show') {
+        rustBody.dataset.rustShow = 'hide';
+        expandButton.dataset.rustShow = 'show';
+      } 
+    }
   });
-
-  // test if user is authenticated
-  // rust.querySelector('#test').addEventListener('click', function() {
-  //   chrome.runtime.sendMessage({
-  //     type: 'test'
-  //   }, function(response) {
-  //     console.log('auth test response:');
-  //     console.log(response);
-  //   });
-  // });
 };
 
 
@@ -176,9 +185,9 @@ chrome.runtime.sendMessage({
     cleanDOM();
     // For demo: add user name if logged in. Makes not much sense like this
     var html = '';
-    if (response.data.userInfo.name) {
-      html = '<div>Hello, ' + response.data.userInfo.name + '</div>';
-    }
+    // if (response.data.userInfo.name) {
+    //   html = '<div>Hello, ' + response.data.userInfo.name + '</div>';
+    // }
     // templating
     html += templating(response.data.comments);
     // add input field
