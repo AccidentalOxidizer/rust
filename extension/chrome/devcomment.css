@@ -1,0 +1,13 @@
+[data-rust-identity="expand"] {
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+    border-top: 20px solid transparent;
+    border-left: 20px solid transparent;
+    border-right: 20px solid #B7410E;
+    border-bottom: 20px solid #B7410E;
+}
+
+[data-rust-show="hide"] {
+  display: none;
+}

@@ -41,7 +41,7 @@ var cleanDOM = function() {
 
 // we can't use handlebars / hogan for mustache due to chrome security limitations 
 var templating = function(comments) {
-  var result = '<div id="commentContainer">';
+  var result = '<div ' + dataAttribute + '="commentContainer">';
   for (var i = comments.length - 1; i >= 0; i--) {
     comment = comments[i];
     result += [
@@ -54,6 +54,12 @@ var templating = function(comments) {
   }
   result += '</div>';
   return result;
+};
+
+var addExpandButton = function(html){ 
+  html = '<div ' + dataAttribute + '="rustbody" data-rust-show="hide">' + html;
+  html += '</div><a ' + dataAttribute + '="expand"></a>';
+  return html;
 };
 
 // add input field functionlity to html output
@@ -110,8 +116,24 @@ var registerEventListeners = function() {
   });
 
   // remove everything on clicking close
-  rust.querySelector('#close').addEventListener('click', function() {
-    rust.parentNode.removeChild(rust);
+  rust.querySelector('[data-rust-identity="rustbody"]').addEventListener('click', function() {
+    var expandButton = rust.querySelector('[' + dataAttribute + '="expand"]');
+    console.log(expandButton);
+    if (openApp.style.display !== 'hidden'){
+      openApp.style.display = 'hidden';
+    }
+  });
+
+  //expand comments section when clicking expando button
+  rust.querySelector('[data-rust-identity="expand"]').addEventListener('click', function() {
+    var rustBody = rust.querySelector('[data-rust-identity="rustbody"]');
+    console.log(rustBody.dataset.rustShow);
+    if (rustBody.dataset.rustShow === "hide") {
+      rustBody.dataset.rustShow = 'show';
+      console.log(rustBody.dataset.rustShow);
+    } else {
+      rustBody.dataset.rustShow = 'hide';
+    }
   });
 
   // test if user is authenticated
@@ -145,6 +167,8 @@ chrome.runtime.sendMessage({
     html += templating(response.data.comments);
     // add input field
     html = inputField(html);
+    // add expand button
+    html = addExpandButton(html);
     // append to document
     appendToDOM(html);
     // register event listeners for user input
