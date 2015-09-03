@@ -41,7 +41,7 @@
     "cleanslate.css"
   ],
   "content_scripts": [{
-    "css": ["comment.css", "devcomment.css"],
+    "css": ["cleanslate.css","comment.css"],
     "matches": ["*://*/*"]
   }],
   "manifest_version": 2

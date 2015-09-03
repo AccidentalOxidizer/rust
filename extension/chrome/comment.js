@@ -32,7 +32,7 @@ DATA:
 var url = document.location.href;
 var dataAttribute = 'data-rust-identity';
 var dataAttributeValue = 'identity';
-
+var rustTag = 'data-rust-css="rustful"';
 
 // remove DOM element from previous calls
 var cleanDOM = function() {
@@ -62,6 +62,11 @@ var parseDate = function(dateString) {
   };
 };
 
+// builds [data-rust-type="value"]
+var buildSelector = function(value, type){
+  type = type || 'identity';
+  return [rustTag,' data-rust-', type, '="', value, '"'].join('');
+};
 
 // we can't use handlebars / hogan for mustache due to chrome security limitations 
 var templating = function(comments) {
@@ -72,22 +77,21 @@ var templating = function(comments) {
     comment = comments[i];
     timestamp = parseDate(comment.createdAt);
     result += [
-      '<div data-rust-identity="', comment.User.name, '">',
-        '<div>', comment.User.name, '</div>',
-        '<div>', 
-          '<div>', parseDate(comment.createdAt).time, '</div>',
-          '<div>', parseDate(comment.createdAt).date, '</div>',
+      '<div', buildSelector(comment.User.name),'>',
+        '<div ', buildSelector('username'), '>', comment.User.name, '</div>',
+        '<div ', buildSelector('datetime'), '>', 
+          '<div ', buildSelector('time'), '>', parseDate(comment.createdAt).time, '</div>',
+          '<div ', buildSelector('date'), '>', parseDate(comment.createdAt).date, '</div>',
         '</div>',
-        '<div>', comment.text, '</div>',
-      '</div>'].join('');
+        '<div', buildSelector('commenttext'), '>', comment.text, '</div>'].join('');
   }
   result += '</div>';
   return result;
 };
 
 var addExpandButton = function(html){ 
-  html = '<div ' + dataAttribute + '="rustbody" data-rust-show="hide">' + html;
-  html += '</div><div ' + dataAttribute + '="expandcontainer" data-rust-show="show"><svg><polygon ' + dataAttribute + '="expand" points="20,0 0,20, 20,20"/></svg><div>';
+  html = '<div ' + buildSelector('hide', 'show') + html;
+  html += '</div><div ' + buildSelector('expandcontainer') + 'data-rust-show="show"><svg><polygon ' + dataAttribute + '="expand" points="20,0 0,20, 20,20"/></svg><div>';
   return html;
 };
 
@@ -117,11 +121,13 @@ var appendNewCommentToDom = function(html) {
 var registerEventListeners = function() {
   var rust = document.querySelector('[data-rust-identity="identity"]');
 
+
   // returns an HTML element given value and type (type is optional and defaults to identity): '[data-rust-type="value"]' 
   var dataSelector = function(parentNode, value, type){
     type = type || 'identity';
-    var selector = ['[data-rust-', type, '="', value, '"]'].join('');
-    return rust.querySelector(selector);
+    var selector = buildSelector(value,type);
+    console.log(selector);
+    return rust.querySelector('[' + selector + ']');
   };
 
   rust.querySelector('#rustsubmit').addEventListener('keydown', function(e) {
@@ -192,6 +198,7 @@ chrome.runtime.sendMessage({
     html += templating(response.data.comments);
     // add input field
     html = inputField(html);
+    console.log('postinput', html);
     // add expand button
     html = addExpandButton(html);
     // append to document
