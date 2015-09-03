@@ -1,6 +1,3 @@
-
-
-
 #rustsuperid {
   position: absolute !important;
   /* top: 0 !important; */
@@ -13,12 +10,13 @@
 
 [data-rust-identity="identity"] {
     /* Styles */
+  height: 100% !important;
+  width: 20% !important;
   position: fixed !important;
   bottom: 0px !important;
   right: 0px !important;
   background-color: white !important;
-  border:1px solid grey !important;
-  padding:5px !important;
+  /*padding:5px !important;*/
   /*margin:5px !important;*/
   z-index: 99999 !important;
 }
@@ -29,3 +27,40 @@
 #commentContainer > div.ownChild, .ownChild {
     color: red !important;
 }
+
+[data-rust-identity="expandcontainer"] {
+  position: fixed !important;
+  width: 20px !important;
+  height: 20px !important;
+  right: 0px !important;
+  bottom: 0px !important;
+}
+
+[data-rust-identity="expand"] {
+    position: fixed !important;
+    height: 20px !important;
+    width: 20px !important;
+    right: 0px !important;
+    bottom: 0px !important;
+    fill: #B7410E;
+    /*border-top: 20px solid transparent !important;
+    border-left: 20px solid transparent !important;
+    border-right: 20px solid #B7410E !important;
+    border-bottom: 20px solid #B7410E !important;*/
+}
+
+
+[data-rust-identity="rustbody"]{
+  position: fixed !important;
+  height: 100% !important;
+  width: 100% !important;
+  border:1px solid grey !important;
+}
+
+[data-rust-show="hide"] {
+  display: none !important;
+}
+
+
+
+

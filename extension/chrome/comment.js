@@ -69,8 +69,8 @@ var templating = function(comments) {
 };
 
 var addExpandButton = function(html){ 
-  html = '<div ' + dataAttribute + '="rustbody" data-rust-show="hide">' + html;
-  html += '</div><a ' + dataAttribute + '="expand"></a>';
+  html = '<div ' + dataAttribute + '="rustbody" data-rust-show="show">' + html;
+  html += '</div><div ' + dataAttribute + '="expandcontainer" data-rust-show="show"><svg><polygon ' + dataAttribute + '="expand" points="20,0 0,20, 20,20"/></svg><div>';
   return html;
 };
 
@@ -101,10 +101,9 @@ var registerEventListeners = function() {
   var rust = document.querySelector('[data-rust-identity="identity"]');
 
   // returns an HTML element given value and type (type is optional and defaults to identity): '[data-rust-type="value"]' 
-  var dataSelector = function(value, type){
+  var dataSelector = function(parentNode, value, type){
     type = type || 'identity';
     var selector = ['[data-rust-', type, '="', value, '"]'].join('');
-    console.log(selector);
     return rust.querySelector(selector);
   };
 
@@ -135,26 +134,33 @@ var registerEventListeners = function() {
   });
 
   //expand comments section when clicking expando button
-  rust.dataSelector('expand').addEventListener('click', function() {
+  dataSelector(rust, 'expand').addEventListener('mouseover', function() {
     var rustBody = rust.querySelector('[data-rust-identity="rustbody"]');
-    console.log(rustBody.dataset.rustShow);
-    if (rustBody.dataset.rustShow === "hide") {
+    var expandButton = rust.querySelector('[data-rust-identity="expandcontainer"]');
+    if (rustBody.dataset.rustShow === 'hide') {
       rustBody.dataset.rustShow = 'show';
-      console.log(rustBody.dataset.rustShow);
-    } else {
+      expandButton.dataset.rustShow = 'hide';
+    } 
+  });
+
+  dataSelector(rust, 'rustbody').addEventListener('mouseout', function() {
+    var rustBody = rust.querySelector('[data-rust-identity="rustbody"]');
+    var expandButton = rust.querySelector('[data-rust-identity="expandcontainer"]');
+    if (rustBody.dataset.rustShow === 'show') {
       rustBody.dataset.rustShow = 'hide';
-    }
+      expandButton.dataset.rustShow = 'show';
+    } 
   });
 
   // test if user is authenticated
-  rust.querySelector('#test').addEventListener('click', function() {
-    chrome.runtime.sendMessage({
-      type: 'test'
-    }, function(response) {
-      console.log('auth test response:');
-      console.log(response);
-    });
-  });
+  // rust.querySelector('#test').addEventListener('click', function() {
+  //   chrome.runtime.sendMessage({
+  //     type: 'test'
+  //   }, function(response) {
+  //     console.log('auth test response:');
+  //     console.log(response);
+  //   });
+  // });
 };
 
 
