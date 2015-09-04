@@ -12,7 +12,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-
 var models = {
   'User': 'user/userModel',
   'Url': 'url/urlModel',
