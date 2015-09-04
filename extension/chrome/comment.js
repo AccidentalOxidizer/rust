@@ -27,9 +27,12 @@ DATA:
 */
 
 // content script running for each chrome tab window injected by the extension rust.js
+
+
 var url = document.location.href;
 var dataAttribute = 'data-rust-identity';
 var dataAttributeValue = 'identity';
+
 
 // remove DOM element from previous calls
 var cleanDOM = function() {
@@ -39,18 +42,27 @@ var cleanDOM = function() {
   }
 };
 
+var parseDate = function(dateString) {
+  var dateObj = new Date(dateString);
+  var locale = "en-us";
+  var date = dateObj.toLocaleDateString(locale);
+  var time = dateObj.toLocaleTimeString(locale);
+  return date + " " + time;
+};
+
+
 // we can't use handlebars / hogan for mustache due to chrome security limitations 
 var templating = function(comments) {
-  var result = '<div ' + dataAttribute + '="commentContainer">';
+  var result = '<div ' + dataAttribute + '="commentcontainer">';
+  var timestamp;
   for (var i = comments.length - 1; i >= 0; i--) {
     comment = comments[i];
     result += [
       '<div id="', comment.User.name, '">',
-      '<div>', comment.User.name, '</div>',
-      '<div>', comment.createdAt, '</div>',
-      '<div>', comment.text, '</div>',
-      '</div>'
-    ].join('');
+        '<div>', comment.User.name, '</div>',
+        '<div>', parseDate(comment.createdAt), '</div>',
+        '<div>', comment.text, '</div>',
+      '</div>'].join('');
   }
   result += '</div>';
   return result;
@@ -65,7 +77,6 @@ var addExpandButton = function(html){
 // add input field functionlity to html output
 var inputField = function(html) {
   var inputElement = '<input id="rustsubmit" type="text" name="comment"/><div class="submit-comment">Submit</div>';
-  inputElement += '<a id="test">Auth Test</a> || <a href="http://localhost:3000/api/auth/chrome/google">Login link test</a> || <a id="close">close</a>';
   html += inputElement;
   return html;
 };
@@ -82,12 +93,21 @@ var appendToDOM = function(html) {
 // directly append the new comment which was submitted to server
 var appendNewCommentToDom = function(html) {
   var rust = document.querySelector('[data-rust-identity="identity"]');
-  rust.querySelector('#commentContainer').insertAdjacentHTML('beforeend', '<div class="ownChild">' + html + '</div>');
+  rust.querySelector('[data-rust-identity="commentcontainer"]').insertAdjacentHTML('beforeend', '<div class="ownChild">' + html + '</div>');
 };
 
 // register all the events chrome needs to handle
 var registerEventListeners = function() {
   var rust = document.querySelector('[data-rust-identity="identity"]');
+
+  // returns an HTML element given value and type (type is optional and defaults to identity): '[data-rust-type="value"]' 
+  var dataSelector = function(value, type){
+    type = type || 'identity';
+    var selector = ['[data-rust-', type, '="', value, '"]'].join('');
+    console.log(selector);
+    return rust.querySelector(selector);
+  };
+
   rust.querySelector('#rustsubmit').addEventListener('keydown', function(e) {
     // if user hits enter key
     if (e.keyCode === 13) {
@@ -104,7 +124,6 @@ var registerEventListeners = function() {
           // TODO: We might need some error handling here if we don't have a valid response object!
           // background script rust.js should return the server response
           //reuse templating for new comment (needs to be in an array)
-          console.log(response.data);
           var html = templating(response.data.comments);
           // Append new message 
           appendNewCommentToDom(html);
@@ -115,17 +134,8 @@ var registerEventListeners = function() {
     }
   });
 
-  // remove everything on clicking close
-  rust.querySelector('[data-rust-identity="rustbody"]').addEventListener('click', function() {
-    var expandButton = rust.querySelector('[' + dataAttribute + '="expand"]');
-    console.log(expandButton);
-    if (openApp.style.display !== 'hidden'){
-      openApp.style.display = 'hidden';
-    }
-  });
-
   //expand comments section when clicking expando button
-  rust.querySelector('[data-rust-identity="expand"]').addEventListener('click', function() {
+  rust.dataSelector('expand').addEventListener('click', function() {
     var rustBody = rust.querySelector('[data-rust-identity="rustbody"]');
     console.log(rustBody.dataset.rustShow);
     if (rustBody.dataset.rustShow === "hide") {
