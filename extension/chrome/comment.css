@@ -1,15 +1,22 @@
-[data-rust-identity="identity"] {
-    /* Styles */
-  height: 100% !important;
+[data-rust-css="rustful"][data-rust-identity="identity"] {
+  height: 100vh !important;
   width: 250px !important;
   position: fixed !important;
-  bottom: 0px !important;
   right: 0px !important;
+  bottom: 0px !important;
   background-color: transparent !important;
   z-index: 99999 !important;
+  /*so user can click underneath our div*/
+  pointer-events: none !important;
+  transition: transform 0.3s !important;
 }
 
-[data-rust-identity="expandcontainer"] {
+/*so users can click our divs*/
+[data-rust-css="rustful"][data-rust-identity="identity"] * {
+  pointer-events: auto !important;
+}
+
+[data-rust-css="rustful"][data-rust-identity="expandcontainer"] {
   position: fixed !important;
   width: 20px !important;
   height: 20px !important;
@@ -17,33 +24,32 @@
   bottom: 0px !important;
 }
 
-[data-rust-identity="expandcontainer"] [data-rust-identity="expand"] {
-    position: fixed !important;
-    height: 20px !important;
-    width: 20px !important;
-    right: 0px !important;
-    bottom: 0px !important;
-    fill: #B7410E;
+[data-rust-css="rustful"][data-rust-identity="expand"] {
+  position: fixed !important;
+  height: 20px !important;
+  width: 20px !important;
+  right: 0px !important;
+  bottom: 0px !important;
+  fill: #B7410E !important;
 }
 
-[data-rust-identity="identity"] [data-rust-identity="rustbody"]{
+[data-rust-css="rustful"][data-rust-identity="rustbody"]{
   position: fixed !important;
   height: 100% !important;
   width: 100% !important;
+  top: 0px;
+  right: 0px;
   border:1px solid grey !important;
   background-color: white !important;
-  transition: transform 0.5s;
+  transition: transform 0.3s !important;
 }
 
-[data-rust-identity="rustbody"][data-rust-show="show"] {
+[data-rust-css="rustful"][data-rust-identity="rustbody"][data-rust-show="hide"] {
+  -webkit-transform: translateX(250px) !important; /* THIS NEEDS TO BE SAME AS WIDTH OF rustbody*/
 }
 
-[data-rust-identity="rustbody"][data-rust-show="hide"] {
-  -webkit-transform: translateX(250px); /* THIS NEEDS TO BE SAME AS WIDTH OF rustbody*/
-}
-
-[data-rust-identity="expandcontainer"][data-rust-show="hide"] {
-  display: none;
+[data-rust-css="rustful"][data-rust-identity="expandcontainer"][data-rust-show="hide"] {
+  display: none !important;
 }
 
 
