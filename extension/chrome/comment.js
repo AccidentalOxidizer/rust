@@ -50,10 +50,14 @@ var parseDate = function(dateString) {
   var year = dateObj.getYear() % 100;
   var hour = dateObj.getHours();
   var amOrPm;
-  if (amOrPm > 11) {
+  if (hour > 11) {
     amOrPm = 'PM';
   } else {
     amOrPm = 'AM';
+  }
+  hour = hour % 12;
+  if (hour === 0){
+    hour = 12;
   }
   var minute = dateObj.getMinutes();
   return {
@@ -72,18 +76,24 @@ var buildSelector = function(value, type){
 var templating = function(comments) {
   var comment;
   var timestamp;
-  var result = '<div ' + dataAttribute + '="commentcontainer">';
+  var result = '<div ' + rustTag + dataAttribute + '="commentcontainer">';
   for (var i = comments.length - 1; i >= 0; i--) {
     comment = comments[i];
     timestamp = parseDate(comment.createdAt);
     result += [
       '<div ', rustTag, buildSelector('comment'),'>',
-        '<div ', buildSelector('username'), '>', comment.User.name, '</div>',
-        '<div ', buildSelector('datetime'), '>', 
-          '<div ', buildSelector('time'), '>', parseDate(comment.createdAt).time, '</div>',
-          '<div ', buildSelector('date'), '>', parseDate(comment.createdAt).date, '</div>',
-        '</div>',
-        '<div ', buildSelector('commenttext'), '>', comment.text, '</div>',
+        '<div ', rustTag, buildSelector('toprow'),'>',
+          '<div ', rustTag, buildSelector('username'), '>', comment.User.name, '</div>',
+          '<div ', rustTag, buildSelector('datetime'), '>', 
+            '<div ', rustTag, buildSelector('time'), '>', parseDate(comment.createdAt).time, '</div>',
+            '<div ', rustTag, buildSelector('date'), '>', parseDate(comment.createdAt).date, '</div>',
+          '</div>',
+          '<div ', rustTag, buildSelector('commenttext'), '>', comment.text, '</div>',
+          '<div ', rustTag, buildSelector('flags'), '>',
+            '<div ', rustTag, buildSelector('heart'), '></div>',
+            '<div ', rustTag, buildSelector('flag'), '></div>',
+          '</div>',  
+        '</div>', '<br>',  
       '</div>'].join('');
   }
   result += '</div>';
@@ -98,7 +108,7 @@ var addExpandButton = function(html){
 
 // add input field functionlity to html output
 var inputField = function(html) {
-  var inputElement = '<input id="rustsubmit" type="text" name="comment"/><div class="submit-comment">Submit</div>';
+  var inputElement = '<div ' + rustTag + " " + buildSelector('input') + '><input class="rustsubmit" type="text" name="comment"/><div class="submit-comment">Submit</div></div>';
   html += inputElement;
   return html;
 };
@@ -132,7 +142,7 @@ var registerEventListeners = function() {
     return rust.querySelector('[' + selector + ']');
   };
 
-  rust.querySelector('#rustsubmit').addEventListener('keydown', function(e) {
+  rust.querySelector('[data-rust-identity="input"]').addEventListener('keydown', function(e) {
     // if user hits enter key
     if (e.keyCode === 13) {
       var text = document.getElementById('rustsubmit').value;
@@ -169,7 +179,6 @@ var registerEventListeners = function() {
   });
 
   dataSelector(rust, 'rustbody').addEventListener('mouseleave', function(evt) {
-    console.log(evt.toElement);
     if (evt.toElement !== null){
       var rustBody = rust.querySelector('[data-rust-identity="rustbody"]');
       var expandButton = rust.querySelector('[data-rust-identity="expandcontainer"]');

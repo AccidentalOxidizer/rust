@@ -36,11 +36,14 @@
 [data-rust-css="rustful"][data-rust-identity="rustbody"]{
   position: fixed !important;
   height: 100% !important;
-  width: 100% !important;
-  top: 0px;
-  right: 0px;
+  width: 250px !important;
+  padding: 4px !important;
   border:1px solid grey !important;
+  font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  font-size: 10pt !important;
   background-color: white !important;
+  -webkit-box-sizing: border-box !important;
+  box-sizing: border-box !important;
   transition: transform 0.3s !important;
 }
 
@@ -50,6 +53,83 @@
 
 [data-rust-css="rustful"][data-rust-identity="expandcontainer"][data-rust-show="hide"] {
   display: none !important;
+}
+
+[data-rust-css="rustful"][data-rust-identity="commentcontainer"]{
+  width: 245px !important;
+  -webkit-box-sizing: border-box !important;
+  box-sizing: border-box !important;
+}
+[data-rust-css="rustful"][data-rust-identity="commentcontainer"] * {
+  display: inline-block !important;
+  margin-top: 0px !important;
+  margin-right: 0px !important;
+  margin-bottom: 0px !important;
+  margin-left: 0px !important;
+  -webkit-box-sizing: border-box !important;
+  box-sizing: border-box !important;
+}
+[data-rust-identity="comment"] {
+  width: 100% !important;
+  padding-top: 0px !important;
+  padding-right: 0px !important;
+  padding-bottom: 0px !important;
+  padding-left: 3px !important;
+  -webkit-box-sizing: border-box !important;
+  box-sizing: border-box !important;
+}
+[data-rust-css="rustful"][data-rust-identity="flags"] {
+  position: relative !important;
+  bottom: 0px !important;
+  right: 0px !important;
+  display: inline !important;
+  height: 20px !important;
+  margin-top: 0px !important;
+  margin-right: 0px !important;
+  margin-bottom: 0px !important;
+  margin-left: 0px !important;
+  float: right !important;
+  -webkit-box-sizing: border-box !important;
+  box-sizing: border-box !important;
+}
+[data-rust-css="rustful"][data-rust-identity="heart"] {
+  width: 20px !important;
+  height: 20px !important;
+  border-style: solid !important;
+  -webkit-box-sizing: border-box !important;
+  box-sizing: border-box !important;
+}
+[data-rust-css="rustful"][data-rust-identity="flag"] {
+  width: 20px !important;
+  height: 20px !important;
+  border-style: solid !important;
+  -webkit-box-sizing: border-box !important;
+  -moz-box-sizing: border-box !important;
+  box-sizing: border-box !important;
+  margin-top: 0px !important;
+  margin-right: 0px !important;
+  margin-bottom: 0px !important;
+  margin-left: 0px !important;
+}
+[data-rust-css="rustful"][data-rust-identity="toprow"] {
+  width: 100% !important;
+  margin-bottom: 3px !important;
+}
+[data-rust-css="rustful"][data-rust-identity="commenttext"] {
+  padding-left: 8px !important;
+  word-wrap: break-word !important;
+  width: 100% !important;
+}
+[data-rust-css="rustful"][data-rust-identity="datetime"] {
+  float: right !important;
+  padding-right: 3px !important;
+}
+[data-rust-css="rustful"][data-rust-identity="time"] {
+  margin-right: 3px !important;
+}
+[data-rust-css="rustful"][data-rust-identity="input"] {
+  position: absolute !important;
+  bottom: 4px !important;
 }
 
 
