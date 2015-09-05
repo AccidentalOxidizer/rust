@@ -128,7 +128,7 @@ var appendToDOM = function(html) {
 // directly append the new comment which was submitted to server
 var appendNewCommentToDom = function(html) {
   var rust = document.querySelector('[data-rust-identity="identity"]');
-  rust.querySelector('[data-rust-identity="commentcontainer"]').insertAdjacentHTML('beforeend', '<div class="ownChild">' + html + '</div>');
+  rust.querySelector('[data-rust-identity="commentcontainer"]').insertAdjacentHTML('afterbegin', '<div class="ownChild">' + html + '</div>');
 };
 
 // register all the events chrome needs to handle
