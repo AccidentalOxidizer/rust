@@ -59,6 +59,8 @@
   width: 245px !important;
   -webkit-box-sizing: border-box !important;
   box-sizing: border-box !important;
+  height: calc(100% - 35px) !important;
+  overflow-y: scroll !important;
 }
 [data-rust-css="rustful"][data-rust-identity="commentcontainer"] * {
   display: inline-block !important;
@@ -68,6 +70,15 @@
   margin-left: 0px !important;
   -webkit-box-sizing: border-box !important;
   box-sizing: border-box !important;
+}
+[data-rust-css="rustful"][data-rust-identity="input"] {
+  position: absolute !important;
+  bottom: 4px !important;
+  height: 30px !important;
+  width: 100% !important;
+}
+[data-rust-css="rustful"][data-rust-identity="input"] * {
+  display: inline-block;
 }
 [data-rust-css="rustful"][data-rust-identity="comment"] {
   width: 100% !important;
@@ -126,8 +137,4 @@
 }
 [data-rust-css="rustful"][data-rust-identity="time"] {
   margin-right: 3px !important;
-}
-[data-rust-css="rustful"][data-rust-identity="input"] {
-  position: absolute !important;
-  bottom: 4px !important;
 }
