@@ -4,19 +4,19 @@ var Heart = require('../').Heart;
 var Flag = require('../').Flag;
 
 var get = function(searchObject, lastCommentId) {
-  var attributes = ['text', 'User.name']; 
+  var attributes = ['text', 'User.name'];
   var queryObject = {
     where: searchObject,
     include: [{
-        model: User,
-        attributes: ['name']
-      }, {
-        model: Heart,
-        attributes: ['id']
-      }, {
-        model: Flag,
-        attributes: ['id']
-      }]
+      model: User,
+      attributes: ['name']
+    }, {
+      model: Heart,
+      attributes: ['id']
+    }, {
+      model: Flag,
+      attributes: ['id']
+    }]
   };
 
   if (lastCommentId !== null) {
@@ -29,7 +29,6 @@ var get = function(searchObject, lastCommentId) {
 
   // return in descending order of commentid
   queryObject.order = 'id ASC';
-  console.log(queryObject);
   return Comment.findAll(queryObject)
     .then(function(results) {
       // Iterate over our results array and update the number of hearts and favorites so

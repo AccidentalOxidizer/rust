@@ -109,7 +109,7 @@ var addExpandButton = function(html) {
 
 // add input field functionlity to html output
 var inputField = function(html) {
-  var inputElement = '<div ' + rustTag + " " + buildSelector('input') + '><input ' + buildSelector('inputfield') + ' type="text" name="comment"/><div class="submit-comment">Submit</div></div>';
+  var inputElement = '<div ' + rustTag + " " + buildSelector('input') + '><input ' + buildSelector('inputfield') + ' type="text" name="comment"/><div ' + buildSelector('submit-comment') + '>Submit</div></div>';
   html += inputElement;
   return html;
 };
@@ -128,7 +128,7 @@ var appendToDOM = function(html) {
 // directly append the new comment which was submitted to server
 var appendNewCommentToDom = function(html) {
   var rust = document.querySelector('[data-rust-identity="identity"]');
-  rust.querySelector('[data-rust-identity="commentcontainer"]').insertAdjacentHTML('beforeend', '<div class="ownChild">' + html + '</div>');
+  rust.querySelector('[data-rust-identity="commentcontainer"]').insertAdjacentHTML('afterbegin', '<div class="ownChild">' + html + '</div>');
 };
 
 // register all the events chrome needs to handle
